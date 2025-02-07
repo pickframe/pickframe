@@ -21,16 +21,4 @@ public static class ProcessStatusExtension
             default: throw new ArgumentOutOfRangeException(nameof(status));
         }
     }
-
-    public static ProcessStatus ToProcessStatusEnum(this string status)
-    {
-        return status switch
-        {
-            nameof(ProcessStatus.queued) => ProcessStatus.queued,
-            nameof(ProcessStatus.processed) => ProcessStatus.processed,
-            nameof(ProcessStatus.processing) => ProcessStatus.processing,
-            nameof(ProcessStatus.failure) => ProcessStatus.failure,
-            _ => throw new ArgumentOutOfRangeException(nameof(status)),
-        };
-    }
 }

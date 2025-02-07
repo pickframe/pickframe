@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Application.UseCases.GetFrames;
 using Confluent.Kafka;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Kafka;
 
+[ExcludeFromCodeCoverage]
 public class KafkaConsumerService
 {
     private readonly string _topic;

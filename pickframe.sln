@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		sonar.cmd = sonar.cmd
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFMpeg", "Infrastructure\FFMpeg\FFMpeg.csproj", "{419713B7-74E1-4818-ABD3-5028DE8BDE3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,10 @@ Global
 		{036ADEB6-EF9C-4387-81ED-2D1F9253AFA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{036ADEB6-EF9C-4387-81ED-2D1F9253AFA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{036ADEB6-EF9C-4387-81ED-2D1F9253AFA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{419713B7-74E1-4818-ABD3-5028DE8BDE3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{419713B7-74E1-4818-ABD3-5028DE8BDE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{419713B7-74E1-4818-ABD3-5028DE8BDE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{419713B7-74E1-4818-ABD3-5028DE8BDE3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,5 +88,6 @@ Global
 		{7C079E98-922C-4913-BB38-31D4DE455665} = {A871C4DC-BB61-4C69-951F-CF153A7320FB}
 		{F17818EC-239F-4B31-926D-AFBE948FD9B1} = {A871C4DC-BB61-4C69-951F-CF153A7320FB}
 		{CF1A11A0-DB12-4B61-AC47-8084351DD0D8} = {AE7BEB50-B97E-4F84-95F9-487F071674EA}
+		{419713B7-74E1-4818-ABD3-5028DE8BDE3D} = {A871C4DC-BB61-4C69-951F-CF153A7320FB}
 	EndGlobalSection
 EndGlobal

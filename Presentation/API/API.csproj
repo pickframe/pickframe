@@ -33,11 +33,7 @@
     <ProjectReference Include="..\..\Core\Application\Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\AmazonS3\AmazonS3.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Database\Database.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FFMpeg\FFMpeg.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Kafka\Kafka.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="ffmpeg.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>

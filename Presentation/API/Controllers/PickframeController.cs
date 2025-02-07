@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using Application.Services;
 using Application.UseCases.CreateProcess;
 using Application.UseCases.GetStatus;
@@ -9,6 +10,7 @@ namespace API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[ExcludeFromCodeCoverage]
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class PickframeController : ControllerBase
 {

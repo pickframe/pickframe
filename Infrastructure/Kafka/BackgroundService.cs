@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Hosting;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Kafka;
 
+[ExcludeFromCodeCoverage]
 public class KafkaBackgroundService : BackgroundService
 {
     private readonly KafkaConsumerService _consumerService;

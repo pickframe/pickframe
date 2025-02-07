@@ -2,9 +2,11 @@ using Application.Services;
 using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Kafka;
 
+[ExcludeFromCodeCoverage]
 public class KafkaProducerService : IEnqueuService
 {
     private readonly IProducer<string, string> _producer;

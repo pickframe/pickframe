@@ -13,7 +13,7 @@ namespace Tests.UseCases;
 
 public class CreateProcessTest
 {
-    private static CreateProcessHandler CreateProcessHandlerUseCase()
+    private static CreateProcessHandler CreateProcessHandlerUseCase(bool uploadResult, bool saveResult, bool throwException = false)
     {
         var logger = new Mock<ILogger<CreateProcessHandler>>();
         var enqueuService = new Mock<IEnqueuService>();
@@ -22,7 +22,7 @@ public class CreateProcessTest
         var response = new UploadVideoResponse()
         {
             Id = videoId,
-            Success = true,
+            Success = uploadResult,
             Path = $"media/{videoId}"
         };
 
@@ -30,7 +30,15 @@ public class CreateProcessTest
         mediator.Setup(e => e.Send(It.IsAny<UploadVideoRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
 
         var repository = new Mock<IProcessRepository>();
-        repository.Setup(i => i.Save(It.IsAny<Process>())).ReturnsAsync(true);
+
+        if (throwException)
+        {
+            repository.Setup(i => i.Save(It.IsAny<Process>())).Throws(new Exception("test"));
+        }
+        else
+        {
+            repository.Setup(i => i.Save(It.IsAny<Process>())).ReturnsAsync(saveResult);
+        }
 
         return new CreateProcessHandler(logger.Object, enqueuService.Object, mediator.Object, repository.Object);
     }
@@ -40,7 +48,7 @@ public class CreateProcessTest
     {
         // Arrange
         var request = CreateProcessRequestBuilder.Instancia();
-        var useCase = CreateProcessHandlerUseCase();
+        var useCase = CreateProcessHandlerUseCase(true, true);
 
         // Act
         var result = await useCase.Handle(request, default);
@@ -49,5 +57,53 @@ public class CreateProcessTest
         result.Should().NotBeNull();
         result.Success.Should().BeTrue();
         result.Id.Should().NotBeNullOrEmpty();
+    }
+
+    [Fact]
+    public async Task CreateProcess_AnyProcess_ReturnsFailToUploadVideo()
+    {
+        // Arrange
+        var request = CreateProcessRequestBuilder.Instancia();
+        var useCase = CreateProcessHandlerUseCase(false, true);
+
+        // Act
+        var result = await useCase.Handle(request, default);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Success.Should().BeFalse();
+        result.Id.Should().BeEmpty();
+        result.Message.Should().Be("Error uploading video");
+    }
+
+    [Fact]
+    public async Task CreateProcess_AnyProcess_ReturnsFailToSaveVideo()
+    {
+        // Arrange
+        var request = CreateProcessRequestBuilder.Instancia();
+        var useCase = CreateProcessHandlerUseCase(true, false);
+
+        // Act
+        var result = await useCase.Handle(request, default);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Success.Should().BeFalse();
+        result.Id.Should().NotBeNullOrEmpty();
+        result.Message.Should().Be("Error saving video to database");
+    }
+
+    [Fact]
+    public async Task CreateProcess_AnyProcess_ReturnsException()
+    {
+        // Arrange
+        var request = CreateProcessRequestBuilder.Instancia();
+        var useCase = CreateProcessHandlerUseCase(true, false, true);
+
+        // Act
+        Func<Task> acao = async () => await useCase.Handle(request, default);
+
+        // Assert
+        var result = await acao.Should().ThrowAsync<Exception>();
     }
 }

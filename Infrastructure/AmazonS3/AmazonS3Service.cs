@@ -6,9 +6,11 @@ using Amazon.S3.Transfer;
 using Application.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AmazonS3;
 
+[ExcludeFromCodeCoverage]
 public class AmazonS3Service : IStorageService
 {
     private AmazonS3Client _client { get; set; }
@@ -58,17 +60,18 @@ public class AmazonS3Service : IStorageService
         return true;
     }
 
-    public async Task DownloadFileAsync(string path, string localDirectory)
+    public async Task<bool> DownloadFileAsync(string path, string localDirectory)
     {
         try
         {
             var tu = new TransferUtility(_client);
             await tu.DownloadAsync(localDirectory, _bucketName, path);
+            return true;
         }
         catch (Exception ex)
         {
             _logger.LogError("Erro: {ErrorMessage}", ex.Message);
-            throw;
+            return false;
         }
     }
 

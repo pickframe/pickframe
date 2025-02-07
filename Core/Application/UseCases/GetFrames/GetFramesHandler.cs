@@ -8,27 +8,31 @@ using System.IO.Compression;
 
 namespace Application.UseCases.GetFrames;
 
-public class GetFramesHandler : IRequestHandler<GetFramesRequest>
+public class GetFramesHandler : IRequestHandler<GetFramesRequest, GetFramesResponse>
 {
     private ILogger<GetFramesHandler> _logger { get; set; }
     private IProcessRepository _processRepository { get; set; }
     private IStorageService _storageService { get; set; }
+    public IVideoProcessorService _videoProcessorService { get; }
 
     public GetFramesHandler(
         ILogger<GetFramesHandler> logger, 
         IProcessRepository videoRepository, 
-        IStorageService storageService)
+        IStorageService storageService,
+        IVideoProcessorService videoProcessorService)
     {
         _logger = logger;
         _processRepository = videoRepository;
         _storageService = storageService;
+        _videoProcessorService = videoProcessorService;
     }
 
-    public async Task Handle(GetFramesRequest request, CancellationToken cancellationToken)
+    public async Task<GetFramesResponse> Handle(GetFramesRequest request, CancellationToken cancellationToken)
     {
         try
         {
             _logger.LogInformation("GetFramesHandler called");
+            GetFramesResponse response = new();
 
             await _processRepository.UpdateStatus(request.Id, ProcessStatus.processing);
             _logger.LogInformation("Process status updated to processing");
@@ -45,9 +49,9 @@ public class GetFramesHandler : IRequestHandler<GetFramesRequest>
 
             var localPath = $"{workDir}/Input/{process.Id}.mp4";
             _logger.LogInformation("Downloading video at {localPath}", localPath);
-            await _storageService.DownloadFileAsync(process.InputMediaPath, localPath);
+            var downloaded = await _storageService.DownloadFileAsync(process.InputMediaPath, localPath);
 
-            if (File.Exists(localPath))
+            if (downloaded)
             {
                 _logger.LogInformation("File downloaded successfully");
             }
@@ -55,7 +59,7 @@ public class GetFramesHandler : IRequestHandler<GetFramesRequest>
             {
                 _logger.LogError("Error downloading {InputMediaPath} into {LocalPath}", process.InputMediaPath, localPath);
                 await _processRepository.UpdateStatus(request.Id, ProcessStatus.failure);
-                return;
+                return response;
             }
 
             // Create output folder
@@ -63,17 +67,8 @@ public class GetFramesHandler : IRequestHandler<GetFramesRequest>
             _logger.LogInformation("Creating output folder {outputFolder}", outputFolder);
             Directory.CreateDirectory(outputFolder);
 
-            var videoInfo = FFProbe.Analyse(localPath);
-            var duration = videoInfo.Duration;
-            var interval = TimeSpan.FromSeconds(20);
-
-            for (var currentTime = TimeSpan.Zero; currentTime < duration; currentTime += interval)
-            {
-                _logger.LogInformation("Processando frame: {CurrentFrame}", currentTime);
-                var outputPath = Path.Combine(outputFolder, $"frame_at_{currentTime.TotalSeconds}.jpg");
-                FFMpeg.Snapshot(localPath, outputPath, new System.Drawing.Size(1920, 1080), currentTime);
-            }
-
+            var processResult = _videoProcessorService.PickFramesAt(localPath, outputFolder, 20);
+            if (!processResult) return response;
 
             _logger.LogInformation("Gerando arquivo ZIP");
             string zipName = $"{request.Id}-result.zip";
@@ -101,6 +96,8 @@ public class GetFramesHandler : IRequestHandler<GetFramesRequest>
                 _logger.LogInformation("Frames extracted successfully");
                 await _processRepository.UpdateStatus(request.Id, ProcessStatus.processed);
                 await _processRepository.InsertOutputPath(request.Id, outputMediaPath);
+                response.Sucess = true;
+                response.OutputMediaPath = outputMediaPath;
                 _logger.LogInformation("Process status updated to processed");
             }
 
@@ -109,6 +106,8 @@ public class GetFramesHandler : IRequestHandler<GetFramesRequest>
                 _logger.LogInformation("Deleting workdir");
                 Directory.Delete(workDir, true);
             }
+
+            return response;
         }
         catch (Exception ex)
         {
@@ -116,6 +115,7 @@ public class GetFramesHandler : IRequestHandler<GetFramesRequest>
             _logger.LogInformation("Updating status to failure");
             await _processRepository.UpdateStatus(request.Id, ProcessStatus.failure);
             _logger.LogInformation("Process status updated to failure");
+            throw;
         }
     }
 }

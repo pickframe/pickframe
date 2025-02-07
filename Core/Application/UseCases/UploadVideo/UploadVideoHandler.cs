@@ -17,12 +17,11 @@ public class UploadVideoHandler : IRequestHandler<UploadVideoRequest, UploadVide
 
     public async Task<UploadVideoResponse> Handle(UploadVideoRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("UploadVideoHandler called");
-
-        UploadVideoResponse response = new();
-
         try
         {
+            _logger.LogInformation("UploadVideoHandler called");
+            UploadVideoResponse response = new();
+
             var newGuid = Guid.NewGuid().ToString();
             response.Id = newGuid;
 
@@ -40,12 +39,13 @@ public class UploadVideoHandler : IRequestHandler<UploadVideoRequest, UploadVide
             {
                 _logger.LogError("Error uploading file");
             }
+
+            return response;
         }
         catch (Exception ex)
         {
             _logger.LogError("Error uploading video: {Message}", ex.Message);
+            throw;
         }
-
-        return response;
     }
 }
