@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Código
+      - name: Checkout CÃ³digo
         uses: actions/checkout@v4
 
       - name: Instalar .NET 8
@@ -18,15 +18,15 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Restaurar Dependências
-        run: dotnet restore
+      - name: Restaurar DependÃªncias
+        run: dotnet restore ./pickframe.sln
 
       - name: Executar Testes com Cobertura
         run: |
           dotnet tool install --global dotnet-coverage
           dotnet-coverage collect "dotnet test ./Tests/Tests/Tests.csproj" -f xml -o "coverage.xml"
 
-      - name: Analisar Código no SonarCloud
+      - name: Analisar CÃ³digo no SonarCloud
         run: |
           dotnet tool install --global dotnet-sonarscanner
           dotnet-sonarscanner begin \
@@ -40,7 +40,7 @@ jobs:
 
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-      - name: Verificar Cobertura de Código
+      - name: Verificar Cobertura de CÃ³digo
         run: |
           COVERAGE=$(cat coverage.opencover.xml | grep -oP 'line-rate="\K[0-9.]+')
           COVERAGE_PERCENT=$(echo "$COVERAGE * 100" | bc)
