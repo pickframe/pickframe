@@ -48,7 +48,7 @@ public class GetFramesTest
         // Act 
         var result = await useCase.Handle(command, default);
 
-        // Assert
+        // Asserts
         result.Should().NotBeNull();
         result.Sucess.Should().BeTrue();
     }
