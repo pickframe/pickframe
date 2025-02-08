@@ -17,6 +17,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      
+      - name: Restaurar Dependências
+        run: dotnet restore ./pickframe.sln
 
       - name: Executar Testes com Cobertura
         run: |
