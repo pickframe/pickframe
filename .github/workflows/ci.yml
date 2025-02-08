@@ -1,6 +1,9 @@
 name: CI - Code Coverage Check
 
 on:
+  push: 
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -42,7 +45,7 @@ jobs:
 
       - name: Verificar Cobertura de Código
         run: |
-          COVERAGE=$(cat coverage.opencover.xml | grep -oP 'line-rate="\K[0-9.]+')
+          COVERAGE=$(cat coverage.xml | grep -oP 'line-rate="\K[0-9.]+')
           COVERAGE_PERCENT=$(echo "$COVERAGE * 100" | bc)
           REQUIRED_COVERAGE=80
 
