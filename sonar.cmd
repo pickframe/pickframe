@@ -14,6 +14,7 @@ dotnet build ./pickframe.sln --no-incremental
 ECHO ============================
 ECHO TEST
 ECHO ============================
+dotnet tool install --global dotnet-coverage
 dotnet-coverage collect "dotnet test ./Tests/Tests/Tests.csproj" -f xml -o "coverage.xml"
 ECHO ============================
 ECHO END

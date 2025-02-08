@@ -34,6 +34,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFMpeg", "Infrastructure\FFMpeg\FFMpeg.csproj", "{419713B7-74E1-4818-ABD3-5028DE8BDE3D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{8E5CF928-2D80-4F70-BDDE-25529D4DC4DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{B84280D1-FFC0-4BCA-B314-A808F4499AE6}"
+	ProjectSection(SolutionItems) = preProject
+		ci.yml = ci.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,5 +96,6 @@ Global
 		{F17818EC-239F-4B31-926D-AFBE948FD9B1} = {A871C4DC-BB61-4C69-951F-CF153A7320FB}
 		{CF1A11A0-DB12-4B61-AC47-8084351DD0D8} = {AE7BEB50-B97E-4F84-95F9-487F071674EA}
 		{419713B7-74E1-4818-ABD3-5028DE8BDE3D} = {A871C4DC-BB61-4C69-951F-CF153A7320FB}
+		{B84280D1-FFC0-4BCA-B314-A808F4499AE6} = {8E5CF928-2D80-4F70-BDDE-25529D4DC4DB}
 	EndGlobalSection
 EndGlobal
