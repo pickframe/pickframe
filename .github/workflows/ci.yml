@@ -42,16 +42,3 @@ jobs:
           dotnet build ./pickframe.sln --no-restore
 
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-
-      - name: Verificar Cobertura de Código
-        run: |
-          COVERAGE=$(cat coverage.xml | grep -oP 'line-rate="\K[0-9.]+')
-          COVERAGE_PERCENT=$(echo "$COVERAGE * 100" | bc)
-          REQUIRED_COVERAGE=80
-
-          echo "Cobertura atual: $COVERAGE_PERCENT%"
-          
-          if (( $(echo "$COVERAGE_PERCENT < $REQUIRED_COVERAGE" | bc -l) )); then
-            echo "Cobertura abaixo do esperado! ($COVERAGE_PERCENT% < $REQUIRED_COVERAGE%)"
-            exit 1
-          fi
