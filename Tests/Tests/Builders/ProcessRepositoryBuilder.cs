@@ -10,7 +10,7 @@ public class ProcessRepositoryBuilder
 
     public ProcessRepositoryBuilder() => service = new Mock<IProcessRepository>();
 
-    public ProcessRepositoryBuilder SetupGetById(Process process)
+    public ProcessRepositoryBuilder SetupGetById(Process? process)
     {
         service.Setup(e => e.GetById(It.IsAny<string>())).ReturnsAsync(process);
         return this;

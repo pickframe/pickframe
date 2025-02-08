@@ -27,5 +27,11 @@ public class StorageServiceBuilder
         return this;
     }
 
+    public StorageServiceBuilder SetupGetPublicURL(string result)
+    {
+        service.Setup(e => e.GetPublicURL(It.IsAny<string>())).ReturnsAsync(result);
+        return this;
+    }
+
     public IStorageService Instancia() => service.Object;
 }
