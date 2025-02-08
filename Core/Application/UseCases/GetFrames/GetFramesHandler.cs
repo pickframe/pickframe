@@ -4,6 +4,8 @@ using Domain.Entities.Process;
 using FFMpegCore;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.IO;
+using System;
 using System.IO.Compression;
 
 namespace Application.UseCases.GetFrames;
@@ -81,8 +83,13 @@ public class GetFramesHandler : IRequestHandler<GetFramesRequest, GetFramesRespo
             MemoryStream memStream = new MemoryStream();
             using (FileStream fileStream = File.OpenRead(destinationZipFilePath))
             {
-                memStream.SetLength(fileStream.Length);
-                fileStream.Read(memStream.GetBuffer(), 0, (int)fileStream.Length);
+                int read;
+                var buffer = new byte[1024];
+
+                while((read = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    memStream.Write(buffer, 0, read);
+                }
             }
 
             string outputMediaPath = $"results/{zipName}";
